@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SigmatiqAI - LinkedIn Banner (with Alert)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 1128px;
+            height: 191px;
+            background: linear-gradient(135deg, #0A1414 0%, #0F1F1F 50%, #152626 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Grid overlay */
+        .grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(0, 196, 167, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 196, 167, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+        }
+
+        /* Gradient orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .orb-1 {
+            width: 250px;
+            height: 250px;
+            background: #00C4A7;
+            top: -120px;
+            left: -80px;
+        }
+
+        .orb-2 {
+            width: 200px;
+            height: 200px;
+            background: #FFB800;
+            bottom: -100px;
+            right: 100px;
+        }
+
+        /* Content container */
+        .content {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 50px;
+        }
+
+        /* Left section - Logo and Text */
+        .left-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            flex-shrink: 0;
+            filter: drop-shadow(0 3px 15px rgba(0, 196, 167, 0.4));
+        }
+
+        .brand-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .brand-name {
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+
+        .brand-teal {
+            color: #00C4A7;
+        }
+
+        .brand-gold {
+            color: #FFB800;
+        }
+
+        .tagline {
+            font-size: 14px;
+            font-weight: 600;
+            color: #00C4A7;
+            letter-spacing: -0.3px;
+        }
+
+        .subtitle {
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.65);
+            letter-spacing: -0.2px;
+        }
+
+        /* Right section - Alert with steps */
+        .right-section {
+            position: relative;
+        }
+
+        /* Alert Card */
+        .alert-card-background {
+            position: relative;
+            width: 310px;
+            background: rgba(21, 38, 38, 0.25);
+            border: 1px solid rgba(0, 196, 167, 0.18);
+            border-radius: 12px;
+            padding: 12px;
+            backdrop-filter: blur(8px);
+        }
+
+        .alert-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .alert-symbol {
+            font-size: 14px;
+            font-weight: 700;
+            color: rgba(0, 196, 167, 0.45);
+        }
+
+        .alert-badge {
+            font-size: 8px;
+            font-weight: 600;
+            color: rgba(255, 184, 0, 0.5);
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(255, 184, 0, 0.12);
+            border: 1px solid rgba(255, 184, 0, 0.22);
+        }
+
+        .alert-setup {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.28);
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .alert-metrics {
+            display: grid;
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+
+        .alert-metric {
+            display: flex;
+            justify-content: space-between;
+            font-size: 8px;
+        }
+
+        .alert-metric-label {
+            color: rgba(255, 255, 255, 0.32);
+            font-weight: 500;
+        }
+
+        .alert-metric-value {
+            color: rgba(0, 196, 167, 0.4);
+            font-weight: 600;
+        }
+
+        .alert-buttons-ghost {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .alert-button-ghost {
+            flex: 1;
+            padding: 5px;
+            border-radius: 6px;
+            font-size: 9px;
+            font-weight: 600;
+            text-align: center;
+            border: 1px solid;
+        }
+
+        .alert-button-approve {
+            background: rgba(0, 196, 167, 0.1);
+            border-color: rgba(0, 196, 167, 0.22);
+            color: rgba(0, 196, 167, 0.45);
+        }
+
+        .alert-button-decline {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.28);
+        }
+
+        /* Process steps */
+        .process-flow {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .process-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .process-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            background: linear-gradient(135deg, rgba(0, 196, 167, 0.25), rgba(0, 196, 167, 0.08));
+            border: 2px solid #00C4A7;
+            color: #00C4A7;
+            box-shadow: 0 0 20px rgba(0, 196, 167, 0.4);
+        }
+
+        .process-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .arrow {
+            color: #FFB800;
+            font-size: 18px;
+            font-weight: 300;
+            margin: 0 -2px;
+            margin-bottom: 16px;
+            filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
+        }
+
+        /* Website footer */
+        .website-footer {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.35);
+            letter-spacing: 0.5px;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="grid-overlay"></div>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+
+        <div class="content">
+            <div class="left-section">
+                <svg class="logo" viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg">
+                    <g transform="translate(35, 35)">
+                        <rect x="-30" y="-30" width="22" height="22" rx="3" fill="#00C4A7"/>
+                        <rect x="-6" y="-30" width="22" height="22" rx="3" fill="#00C4A7"/>
+                        <rect x="-30" y="-6" width="22" height="22" rx="3" fill="#00C4A7"/>
+                        <rect x="-6" y="-6" width="22" height="22" rx="3" fill="#FFB800"/>
+                        <rect x="18" y="-6" width="22" height="22" rx="3" fill="#FFB800"/>
+                        <rect x="-6" y="18" width="22" height="22" rx="3" fill="#FFB800"/>
+                    </g>
+                </svg>
+
+                <div class="brand-info">
+                    <div class="brand-name">
+                        <span class="brand-teal">SIGMA</span><span class="brand-gold">TIQ</span>
+                    </div>
+                    <div class="tagline">Your AI Trading Companion</div>
+                    <div class="subtitle">Built for Beginner Traders • Earn While You Learn</div>
+                </div>
+            </div>
+
+            <div class="right-section">
+                <div class="alert-card-background">
+                    <div class="alert-header">
+                        <span class="alert-symbol">AAPL 190C</span>
+                        <div class="alert-badge">02:00</div>
+                    </div>
+                    <div class="alert-setup">
+                        Day-trade call: liquid weekly, tight spread, ~0.4 delta
+                    </div>
+                    <div class="alert-metrics">
+                        <div class="alert-metric">
+                            <span class="alert-metric-label">Premium:</span>
+                            <span class="alert-metric-value">$0.45</span>
+                        </div>
+                        <div class="alert-metric">
+                            <span class="alert-metric-label">Contracts:</span>
+                            <span class="alert-metric-value">1 × 100</span>
+                        </div>
+                        <div class="alert-metric">
+                            <span class="alert-metric-label">Delta:</span>
+                            <span class="alert-metric-value">~40%</span>
+                        </div>
+                    </div>
+                    <div class="alert-buttons-ghost">
+                        <div class="alert-button-ghost alert-button-approve">Approve</div>
+                        <div class="alert-button-ghost alert-button-decline">Decline</div>
+                    </div>
+
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <div class="process-circle">1</div>
+                            <div class="process-label">Paper</div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="process-step">
+                            <div class="process-circle">2</div>
+                            <div class="process-label">Practice</div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="process-step">
+                            <div class="process-circle">3</div>
+                            <div class="process-label">Live</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Website footer -->
+        <div class="website-footer">sigmatiq.ai</div>
+    </div>
+</body>
+</html>
